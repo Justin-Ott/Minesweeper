@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Minesweeper</title>
+        <link rel="stylesheet" href="style.css" /> <!-- Where we style it all -->
+    </head>
+    <body>
+        <div class="container">
+            <div class ="row0">
+                <div class="col0">
+                    <!-- Left display: Flags -->
+                    <div class="info-display">
+                        <div class="info-label">🚩</div>
+                        <div id="flagsRemaining" class="info-value">10</div>
+                    </div>
+                </div>
+                <div class="col0">
+                   <h2>Minesweeper</h2>
+                </div>
+                <div class="col0">
+                   <!-- Right display: Score -->
+                    <div class="info-display">
+                        <div class="info-label">Score</div>
+                        <div id="scoreDisplay" class="info-value">0</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row1">
+                <div class="col1">
+                    <div class="info-display">
+                        <!-- Lets user decrease size of the game -->
+                        <button id = "decreaseSizeButton">Down Board Size</button>
+                    </div>
+                </div>
+                <div class="col1">
+                    <div class="info-display">
+                        <!-- Lets user increase size of the game -->
+                        <button id = "increaseSizeButton">Up Board Size</button>
+                    </div>
+                </div>
+                <div class="col1">
+                    <div class="info-display">
+                        <!-- Lets user reset size of the game -->
+                        <button id = "resetSizeButton">Reset Size</button>
+                    </div>
+                </div>
+            </div> 
+            <div class="row2">
+                <div class="col2" class = "easyButton">
+                    <button id = "easyButton">Easy Mode</button>
+                </div>
+                <div class="col2">
+                    <button id = "mediumButton" class = "mediumButton">Medium Mode</button>
+                </div>
+                <div class="col2">
+                    <button id = "hardButton" class = "hardButton">Hard Mode</button>
+                </div>
+            </div> 
+
+            <!-- Where we put it all together-->
+            <div id="gameBoard"></div> 
+            
+            <canvas id="fireworks-canvas"></canvas>
+
+            <!-- Where we make the grid -->
+            <script src = "script.js"></script> 
+            
+        </div>
+        <div id="gameOverScreen" style="display: none;">
+            <div class="modal-content">
+                <h2>Game Over!</h2>
+                <div class="info-display">
+                    <div class="info-label">🚩</div>
+                    <div id="lossFlagsRemaining" class="info-value">10</div>
+                </div>
+                <div class="info-display">
+                    <div class="info-label">Score</div>
+                    <div id="lossScoreDisplay" class="info-value">0</div>
+                </div>
+                <button id="restartButton">Restart Game</button>
+            </div>
+        </div>
+        <div id="winScreen" style="display: none;">
+            <div class="modal-content">
+                <h2>You Win!</h2>
+                <div class="info-display">
+                    <div class="info-label">Mines Found</div>
+                    <div id="winFlagsTotal" class="info-value">10</div>
+                </div>
+                <div class="info-display">
+                    <div class="info-label">Score</div>
+                    <div id="WinScoreDisplay" class="info-value">0</div>
+                </div>
+                <button id="restartWinButton">Play Again</button>
+            </div>
+        </div>
+    </body>
+</html>

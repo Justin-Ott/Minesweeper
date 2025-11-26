@@ -1,0 +1,285 @@
+:root {
+    --boardWidth: 10;
+    --boardHeight: 10;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.container {
+    width:100%;
+    min-width: 600px;
+    max-width: fit-content;
+    border:2px solid black;
+    background-color: lightgray;
+    margin: 0 auto;
+    padding:10px;
+}
+.row0 {
+    height:100px; /*set height*/
+    border:2px solid blue;
+    width:100%;
+    margin-bottom:10px;
+    padding:10px;
+    align-self: center;
+}
+
+.col0 {
+    border:2px solid brown;
+    width:31%;
+    float: left;
+    height:100%;
+    margin-right:2%;
+}
+.row1 {
+    height:100px; /*set height*/
+    border:2px solid blue;
+    width:100%;
+    margin-bottom:10px;
+    padding:10px;
+    align-self: center;
+}
+
+.col1 {
+    border:2px solid brown;
+    width:31%;
+    float: left;
+    height:100%;
+    margin-right:2%;
+}
+
+.row2 {
+    height:100px; 
+    border:2px solid blue;
+    width: 100%;
+    margin-bottom:10px;
+    padding:10px;
+    align-self: center;
+}
+
+.col2 {
+    border:2px solid brown;
+    width: 31%;
+    float:left;
+    height:100%;
+    margin-right:2%;
+}
+
+body {
+    font-family: sans-serif;
+    text-align: center;
+    /*background-color: #0989b8;*/
+    --s: 84px; /* control the size*/
+    --c1: #04bcff;
+    --c2: #1796c5;
+    --c3: #0bb3f0;
+    
+    --_g: 0 120deg,#0000 0;
+    background:
+        conic-gradient(             at calc(250%/3) calc(100%/3),var(--c3) var(--_g)),
+        conic-gradient(from -120deg at calc( 50%/3) calc(100%/3),var(--c2) var(--_g)),
+        conic-gradient(from  120deg at calc(100%/3) calc(250%/3),var(--c1) var(--_g)),
+        conic-gradient(from  120deg at calc(200%/3) calc(250%/3),var(--c1) var(--_g)),
+        conic-gradient(from -180deg at calc(100%/3) 50%,var(--c2)  60deg,var(--c1) var(--_g)),
+        conic-gradient(from   60deg at calc(200%/3) 50%,var(--c1)  60deg,var(--c3) var(--_g)),
+        conic-gradient(from  -60deg at 50% calc(100%/3),var(--c1) 120deg,var(--c2) 0 240deg,var(--c3) 0);
+    background-size: calc(var(--s)*sqrt(3)) var(--s);
+}
+
+.info-display {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    gap: 10px;
+}
+
+.info-label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
+
+.info-value {
+    font-size: 24px;
+    background-color: #f0f0f0;
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    min-width: 50px;
+}
+
+#decreaseSizeButton { /* The button to change grid size */
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+#increaseSizeButton { /* The button to change grid size */
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+#resetSizeButton { /* The button to change grid size */
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+#gameBoard { /* The grid style */
+    display: grid;
+    gap: 2px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.cell { /* Style of each bomb or grass */
+    width: 30px;
+    height: 30px;
+    background-color: #0f0f;
+    border: 1px solid #333;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+#flagsRemaining { /* The display box for the number of flags remaining */
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#scoreDisplay { /* The display box for the score/time */
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#easyButton { /* The button to change difficulty to easy (0.1 multi) */
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: green;
+}
+
+#easyButton.selected {
+    background-color: grey;
+}
+
+#mediumButton { /* The button to change difficulty to medium (0.2 multi)*/
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: yellow;
+}
+
+#mediumButton.selected {
+    background-color: grey;
+}
+
+#hardButton { /* The button to change difficulty to hard (0.5 multi)*/
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: red;
+}
+
+#hardButton.selected {
+    background-color: grey;
+}
+
+#restartButton{ /* The button to restart the game */
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;  
+}
+
+#restartButton:hover {
+  background-color: #45a049;
+}
+
+#gameOverScreen { /* The screen displayed when u click a bomb */
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 9000;
+}
+
+#winScreen {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 9000;
+}
+
+.modal-content {
+    background-color: rgb(255, 255, 255);
+    padding: 40px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h2 {
+    margin: 0 0 20px 0;
+    color: #333;
+}
+
+.modal-content button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+}
+
+.modal-content button:hover {
+    background-color: #45a049;
+}
+
+#fireworks-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Allows clicks to pass through the canvas to the game below if needed */
+    z-index: 10; /* Ensure it's on top of game elements */
+}
