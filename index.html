@@ -18,6 +18,13 @@
                 </div>
                 <div class="col0">
                    <h2>Minesweeper</h2>
+                   <!--
+                    <div class="row3">
+                        <div class="col3">
+                            <button id="botMoveButton">Bot Move</button>
+                        </div>
+                    </div>
+                    -->
                 </div>
                 <div class="col0">
                    <!-- Right display: Score -->
@@ -57,14 +64,18 @@
                 <div class="col2">
                     <button id = "hardButton" class = "hardButton">Hard Mode</button>
                 </div>
-            </div> 
+            </div>
 
             <!-- Where we put it all together-->
             <div id="gameBoard"></div> 
-            
+
             <canvas id="fireworks-canvas"></canvas>
 
-            <!-- Where we make the grid -->
+            <audio id="loseGameAudio"><source src="lose_minesweeper.wav" type="audio/wav"></audio>
+            <audio id="winGameAudio"><source src="mixkit-ethereal-fairy-win-sound-2019.wav" type="audio/wav"></audio>
+            <audio id="changeDifAudio"><source src="start.wav" type="audio/wav"></audio>
+
+            <!-- Where we link our files -->
             <script src = "script.js"></script> 
             
         </div>

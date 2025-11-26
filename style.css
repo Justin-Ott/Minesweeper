@@ -18,7 +18,7 @@
 }
 .row0 {
     height:100px; /*set height*/
-    border:2px solid blue;
+    border:2px solid lightgoldenrodyellow;
     width:100%;
     margin-bottom:10px;
     padding:10px;
@@ -26,7 +26,7 @@
 }
 
 .col0 {
-    border:2px solid brown;
+    border:2px solid lightsalmon;
     width:31%;
     float: left;
     height:100%;
@@ -34,7 +34,7 @@
 }
 .row1 {
     height:100px; /*set height*/
-    border:2px solid blue;
+    border:2px solid lightgreen;
     width:100%;
     margin-bottom:10px;
     padding:10px;
@@ -42,7 +42,7 @@
 }
 
 .col1 {
-    border:2px solid brown;
+    border:2px solid skyblue;
     width:31%;
     float: left;
     height:100%;
@@ -51,7 +51,7 @@
 
 .row2 {
     height:100px; 
-    border:2px solid blue;
+    border:2px solid goldenrod;
     width: 100%;
     margin-bottom:10px;
     padding:10px;
@@ -59,7 +59,7 @@
 }
 
 .col2 {
-    border:2px solid brown;
+    border:2px solid lightseagreen;
     width: 31%;
     float:left;
     height:100%;

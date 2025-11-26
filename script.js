@@ -11,7 +11,7 @@ let particles = [];
 let animationInterval;
 let animationId;
 
-let cells = []; // Stoes cell information such as bombs and surrounding mine counts
+let cells = []; // Stores cell information such as bombs and surrounding mine counts
 
 cells.forEach(cellData => {
     cellData.element.addEventListener("contextmenu", e => {
@@ -218,7 +218,8 @@ function checkWin() {
         scoreDisplay.textContent = elapsedSeconds;
         const remainingFlags = document.getElementById('winFlagsTotal');
         if (remainingFlags) remainingFlags.textContent = mineCount; 
-
+        var audio = document.getElementById("winGameAudio");
+        audio.play();
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         startFireworks()
@@ -243,6 +244,8 @@ function gameOver() {
         scoreDisplay.textContent = elapsedSeconds;
         const remainingFlags = document.getElementById('lossFlagsRemaining');
         if (remainingFlags) remainingFlags.textContent = flagsRemaining;
+        var audio = document.getElementById("loseGameAudio");
+        audio.play();
         document.getElementById("gameOverScreen").style.display = "flex";
     }, 30);
 }
@@ -333,7 +336,8 @@ function resetSize() {
     console.log("values", width, height, mineCount);
     flagsLeft();
     resetScoreTimer();
-    
+    var audio = document.getElementById("changeDifAudio");
+    audio.play();
 }
 
 // Change initial board creation to empty
@@ -426,6 +430,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
     }
     if (restartWinButton) {
         restartWinButton.addEventListener("click", restartGame);
+    }
+
+    const botMoveButton = document.getElementById("botMoveButton");
+    if (botMoveButton) {
+        botMoveButton.addEventListener("click", makeBotMove);
     }
 });
 
@@ -520,6 +529,67 @@ function stopFireworks() {
     console.log("Fireworks animation stopped.");
 }
 
+
+// Bot functions
+function getNeighbors(index) {
+    const neighbors = [];
+    const isLeftEdge = index % width === 0;
+    const isRightEdge = (index + 1) % width === 0;
+
+    if (index > 0 && !isLeftEdge) neighbors.push(index - 1);                                      // Left
+    if (index < width * height - 1 && !isRightEdge) neighbors.push(index + 1);                   // Right
+    if (index >= width) neighbors.push(index - width);                                          // Top
+    if (index < width * (height - 1)) neighbors.push(index + width);                           // Bottom
+    if (index >= width + 1 && !isRightEdge) neighbors.push(index - width + 1);                // Top-Right
+    if (index >= width && !isLeftEdge) neighbors.push(index - width - 1);                    // Top-Left
+    if (index < width * (height - 1) - 1 && !isLeftEdge) neighbors.push(index + width - 1); // Bottom-Left
+    if (index < width * (height - 1) && !isRightEdge) neighbors.push(index + width + 1);   // Bottom-Right
+
+    return neighbors;
+}
+
+function findBotMove() {
+    // Simple solver: look for cells where flagged neighbors == number, reveal others
+    for (let i = 0; i < cells.length; i++) {
+        if (!cells[i].revealed || cells[i].number === 0) continue;
+
+        const neighbors = getNeighbors(i);
+        const flaggedNeighbors = neighbors.filter(n => cells[n].flagged);
+        const unrevealedNeighbors = neighbors.filter(n => !cells[n].revealed && !cells[n].flagged);
+
+        if (flaggedNeighbors.length === cells[i].number) {
+            // All mines accounted for, reveal the rest
+            if (unrevealedNeighbors.length > 0) {
+                return { action: 'reveal', index: unrevealedNeighbors[0] };
+            }
+        } else if (unrevealedNeighbors.length === cells[i].number - flaggedNeighbors.length) {
+            // Remaining unrevealed are mines
+            if (unrevealedNeighbors.length > 0) {
+                return { action: 'flag', index: unrevealedNeighbors[0] };
+            }
+        }
+    }
+
+    // If no logical move, pick a random unrevealed cell
+    const unrevealed = cells.map((cell, index) => ({ cell, index })).filter(({ cell }) => !cell.revealed && !cell.flagged);
+    if (unrevealed.length > 0) {
+        const randomIndex = Math.floor(Math.random() * unrevealed.length);
+        return { action: 'reveal', index: unrevealed[randomIndex].index };
+    }
+
+    return null; // No moves left
+}
+
+function makeBotMove() {
+    const move = findBotMove();
+    if (move) {
+        if (move.action === 'reveal') {
+            handleClick(move.index);
+        } else if (move.action === 'flag') {
+            toggleFlag(cells[move.index]);
+        }
+    }
+}
 
 // createBoard();
 createEmptyBoard();
