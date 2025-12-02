@@ -22,7 +22,7 @@ cells.forEach(cellData => {
 
 let gameStarted = false; // Track if game has started
 
-function createBoard(firstClickIndex = null) {
+function createBoard(firstClickIndex = null, protect3x3 = false) {
     clearBoard();
     mineCount = Math.ceil((width * height) * difficulty);
     board.style.gridTemplateColumns = `repeat(${width}, 30px)`;
@@ -38,15 +38,21 @@ function createBoard(firstClickIndex = null) {
     let shuffledArray = gameArray.sort(() => Math.random() - 0.5);
 
     // If this is the first click, ensure that cell is not a mine
-    if (firstClickIndex !== null && shuffledArray[firstClickIndex] === "mine") {
-        // Find an empty cell and swap
-        for (let i = 0; i < shuffledArray.length; i++) {
-            if (shuffledArray[i] === "empty") {
-                shuffledArray[firstClickIndex] = "empty";
-                shuffledArray[i] = "mine";
-                break;
+    if (firstClickIndex !== null && protect3x3) {
+    const protectedCells = get3x3Indices(firstClickIndex);
+
+    protectedCells.forEach(idx => {
+        if (shuffledArray[idx] === "mine") {
+            // find an empty spot to move this mine TO
+            for (let i = 0; i < shuffledArray.length; i++) {
+                if (!protectedCells.includes(i) && shuffledArray[i] === "empty") {
+                    shuffledArray[i] = "mine";
+                    shuffledArray[idx] = "empty";
+                    break;
+                }
             }
         }
+    });
     }
 
     for (let i = 0; i < width * height; i++) {
@@ -236,6 +242,12 @@ function gameOver() {
             cellData.element.textContent = "💣";
             cellData.element.style.backgroundColor = "red";
         }
+        if (cellData.type === "empty") {
+            cellData.element.style.backgroundColor = "#dda";
+            if (cellData.number > 0) {
+                cellData.element.textContent = cellData.number;
+            }
+        }
     });
 
     setTimeout(function() {
@@ -261,12 +273,12 @@ function restartGame() {
 }
 
 function handleClick(index) {
-    // On first click, generate board with mines (but not on this cell)
+    // On first click, generate board with mines but not in a 3x3 area around clicked cell
     if (!gameStarted) {
-        gameStarted = true;
-        createBoard(index);
-        // After creating board, handle this click
-        return handleClick(index);
+    gameStarted = true;
+    createBoard(index, true);   // pass flag to indicate first click
+    reveal3x3(index);           // reveal the 3×3 safe area
+    return;
     }
 
     const cellData = cells[index];
@@ -295,6 +307,36 @@ function handleClick(index) {
     }
     cellData.revealed = true;
     checkWin();
+}
+
+function get3x3Indices(center) {
+    const indices = [];
+    const row = Math.floor(center / width);
+    const col = center % width;
+
+    for (let r = -1; r <= 1; r++) {
+        for (let c = -1; c <= 1; c++) {
+            let newR = row + r;
+            let newC = col + c;
+
+            if (newR >= 0 && newR < height && newC >= 0 && newC < width) {
+                indices.push(newR * width + newC);
+            }
+        }
+    }
+    return indices;
+}
+
+function reveal3x3(center) {
+    const indices = get3x3Indices(center);
+    indices.forEach(i => {
+        if (!cells[i].revealed && !cells[i].flagged) {
+            if (cells[i].number > 0) {
+                cells[i].element.textContent = cells[i].number;
+            }
+            revealCell(i); 
+        }
+    });
 }
 
 function clearBoard() {
@@ -438,6 +480,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
     }
 });
 
+document.addEventListener('keydown', function(event) {
+  // Check if the pressed key is the spacebar and that the game is over
+  if (event.code === 'Space'&& document.getElementById("gameOverScreen").style.display === "flex" || document.getElementById("winScreen").style.display === "flex") {
+    // Prevent the default browser action 
+    event.preventDefault(); 
+    restartGame();
+  }
+});
 
 class Particle {
     constructor(x, y, color) {
