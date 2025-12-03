@@ -59,7 +59,7 @@ function createBoard(firstClickIndex = null, protect3x3 = false) {
         const cell = document.createElement("div");
         cell.classList.add("cell");
         cell.dataset.index = i; // This index is each cells cords 
-        console.log(cell.dataset.index);
+        // console.log(cell.dataset.index);
         board.appendChild(cell);
 
         // Store cell info
@@ -88,15 +88,15 @@ function calculateAdjacentMines() {
         if (cells[i].type === "mine") continue;
             let total = 0;
             const isLeftEdge = i % width === 0;
-            const isRightEdge = (i + 1) %width ===0;
+            const isRightEdge = (i + 1) % width ===0;
 
             if (i > 0 && !isLeftEdge && cells[i-1].type === "mine") total++;                                      // Left
             if (i < width * height - 1 && !isRightEdge && cells [i + 1].type === "mine") total++;                // Right
             if (i >= width && cells[i - width].type ==="mine") total ++;                                        // Top
             if (i < width * (height - 1) && cells[i + width].type === "mine") total++;                         // Bottom
-            if (i >= width + 1 && !isRightEdge && cells[i - width + 1].type === "mine") total++;              // Top-Right
+            if (i >= width && !isRightEdge && cells[i - width + 1].type === "mine") total++;              // Top-Right
             if (i >= width && !isLeftEdge && cells[i - width - 1].type === "mine") total++;                  // Top-Left
-            if (i < width * (height -1) -1 && !isLeftEdge && cells[i + width - 1].type === "mine") total++; // Bottom-Left
+            if (i < width * (height -1) && !isLeftEdge && cells[i + width - 1].type === "mine") total++;    // Bottom-Left
             if (i < width * (height -1) && !isRightEdge && cells[i + width + 1].type === "mine") total++;  // Bottom-Right
         
             cells[i].number = total;
@@ -123,20 +123,19 @@ function revealCell(index) {
     if (cellData.number > 0) {
         cellE1.textContent = cellData.number;
     } else {
-        console.log("Flooding running");
         const isLeftEdge = index % width === 0;
         const isRightEdge = (index + 1) % width === 0;
 
         const neighbors = [];
-        if (index > 0 && !isLeftEdge) neighbors.push(index - 1);                                      // Left
-        if (index < width * height - 1 && !isRightEdge) neighbors.push(index + 1);                   // Right
-        if (index >= width) neighbors.push(index - width);                                          // Top
-        if (index < width * (height - 1)) neighbors.push(index + width);                           // Bottom
-        if (index >= width + 1 && !isRightEdge) neighbors.push(index - width + 1);                // Top-Right
-        if (index >= width && !isLeftEdge) neighbors.push(index - width - 1);                    // Top-Left 
-        if (index < width * (height - 1) - 1 && !isLeftEdge) neighbors.push(index + width - 1); // Bottom-Left
-        if (index < width * (height - 1) && !isRightEdge) neighbors.push(index + width + 1);   // Bottom-Right
-        console.log(neighbors);
+    if (!isLeftEdge && index - 1 >= 0) neighbors.push(index - 1);                                // Left
+    if (!isRightEdge && index + 1 < width * height) neighbors.push(index + 1);                   // Right
+    if (index - width >= 0) neighbors.push(index - width);                                       // Top
+    if (index + width < width * height) neighbors.push(index + width);                           // Bottom
+    if (!isRightEdge && index - width + 1 >= 0) neighbors.push(index - width + 1);               // Top-Right
+    if (!isLeftEdge && index - width - 1 >= 0) neighbors.push(index - width - 1);                // Top-Left
+    if (!isLeftEdge && index + width - 1 < width * height) neighbors.push(index + width - 1);    // Bottom-Left
+    if (!isRightEdge && index + width + 1 < width * height) neighbors.push(index + width + 1);   // Bottom-Right
+
         neighbors.forEach(n => revealCell(n));
     }
 }
@@ -164,24 +163,28 @@ function setDifficultyEasy() {
     difficulty=0.1;
     createBoard();
     flagsLeft();
+    gameStarted = false; 
 }
 
 function setDifficultyMedium() {
     difficulty=0.15;
     createBoard();
     flagsLeft();
+    gameStarted = false; 
 }
 
 function setDifficultyHard() {
     difficulty=0.3;
     createBoard();
     flagsLeft();
+    gameStarted = false; 
 }
 
 let timerId = null;
 let elapsedSeconds = 0;
 
 function startScoreTimer() {
+    console.log("Timer started");
     stopScoreTimer();
     elapsedSeconds = 0;
     const scoreDisplay = document.getElementById('scoreDisplay');
@@ -277,12 +280,10 @@ function handleClick(index) {
     if (!gameStarted) {
     gameStarted = true;
     createBoard(index, true);   // pass flag to indicate first click
-    reveal3x3(index);           // reveal the 3×3 safe area
-    return;
+    reveal3x3(index);           // reveal 3×3 safe area
     }
 
     const cellData = cells[index];
-
     if (elapsedSeconds === 0 && timerId === null) {
         startScoreTimer();
     }
@@ -353,10 +354,9 @@ function decreaseSize() {
     mineCount = Math.ceil((width * height) *difficulty);
     //clearBoard();
     createBoard();
-    console.log("values", width, height, mineCount);
     flagsLeft();
     resetScoreTimer();
-    
+    gameStarted = false; 
 }
 function increaseSize() {
     width++ ;
@@ -364,10 +364,9 @@ function increaseSize() {
     mineCount = Math.ceil((width * height) *difficulty);
     //clearBoard();
     createBoard();
-    console.log("values", width, height, mineCount);
     flagsLeft();
     resetScoreTimer();
-    
+    gameStarted = false; 
 }
 function resetSize() {
     width = 10;
@@ -375,9 +374,9 @@ function resetSize() {
     mineCount = Math.ceil((width * height) *difficulty);
     //clearBoard();
     createBoard();
-    console.log("values", width, height, mineCount);
     flagsLeft();
     resetScoreTimer();
+    gameStarted = false; 
     var audio = document.getElementById("changeDifAudio");
     audio.play();
 }
