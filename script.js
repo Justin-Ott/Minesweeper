@@ -1,7 +1,7 @@
 const board = document.getElementById("gameBoard");
 var width = 10;
 var height = 10;
-var difficulty=0.1;
+var difficulty=0.01;
 var mineCount = Math.ceil((width * height) *difficulty); // Creates a 10x10 board with 20 mines by default
 var flagsRemaining = mineCount;
 
@@ -411,6 +411,15 @@ function createEmptyBoard() {
 }
 
 document.addEventListener('DOMContentLoaded', (event) => {
+    // Set audio volumes
+    const loseGameAudio = document.getElementById("loseGameAudio");
+    const winGameAudio = document.getElementById("winGameAudio");
+    const changeDifAudio = document.getElementById("changeDifAudio");
+    
+    if (loseGameAudio) loseGameAudio.volume = 0.2;
+    if (winGameAudio) winGameAudio.volume = 0.1;
+    if (changeDifAudio) changeDifAudio.volume = 0.4;
+    
     const easyButton = document.getElementById("easyButton");
     const mediumButton = document.getElementById("mediumButton");
     const hardButton = document.getElementById("hardButton");
