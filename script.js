@@ -1,7 +1,7 @@
 const board = document.getElementById("gameBoard");
 var width = 10;
 var height = 10;
-var difficulty=0.01;
+var difficulty=0.1;
 var mineCount = Math.ceil((width * height) *difficulty); // Creates a 10x10 board with 20 mines by default
 var flagsRemaining = mineCount;
 
